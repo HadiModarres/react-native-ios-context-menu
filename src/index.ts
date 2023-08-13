@@ -3,8 +3,9 @@ import { NativeModulesProxy, EventEmitter, Subscription } from 'expo-modules-cor
 // Import the native module. On web, it will be resolved to ReactNativeIosContextMenu.web.ts
 // and on native platforms to ReactNativeIosContextMenu.ts
 import ReactNativeIosContextMenuModule from './ReactNativeIosContextMenuModule';
-import ReactNativeIosContextMenuView from './ReactNativeIosContextMenuView';
 import { ChangeEventPayload, ReactNativeIosContextMenuViewProps } from './ReactNativeIosContextMenu.types';
+
+import { ContextMenu } from './ContextMenu';
 
 // Get the native constant value.
 export const PI = ReactNativeIosContextMenuModule.PI;
@@ -23,4 +24,5 @@ export function addChangeListener(listener: (event: ChangeEventPayload) => void)
   return emitter.addListener<ChangeEventPayload>('onChange', listener);
 }
 
-export { ReactNativeIosContextMenuView, ReactNativeIosContextMenuViewProps, ChangeEventPayload };
+// export { ReactNativeIosContextMenuView, ReactNativeIosContextMenuViewProps, ChangeEventPayload };
+export { ContextMenu };
