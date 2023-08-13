@@ -43,27 +43,27 @@ public class ReactNativeIosContextMenuModule: Module {
                 
                 do{
                     
-                    
-                    let b: UIMenuDefinition = UIMenuDefinition(
-                        title: "title",
-                        subtitle: "subtitle",
-                        children: [
-                            .action(value: UIActionDefinition(title: "action title", subtitle: "action subtitle")),
-                            .menu(value: UIMenuDefinition(title: "submenu title", subtitle: "submenu subtitle",children: nil))
-                        ])
-                    
-                    let encoded = try encoder.encode(b)
-                    let convertedString = String(data: encoded, encoding: .utf8)
-                    
-                    print(convertedString)
+//                    let b: UIMenuDefinition = UIMenuDefinition(
+//                        title: "title",
+//                        subtitle: "subtitle",
+//                        children: [
+//                            .action(value: UIActionDefinition(title: "action title", subtitle: "action subtitle")),
+//                            .menu(value: UIMenuDefinition(title: "submenu title", subtitle: "submenu subtitle",children: nil))
+//                        ])
+//
+//                    let encoded = try encoder.encode(b)
+//                    let convertedString = String(data: encoded, encoding: .utf8)
+//
+//                    print(convertedString)
                     
                     let jsonData = prop.data(using: .utf8)!
                     let specs = try decoder.decode(UIMenuDefinition.self, from: jsonData)
                     
                     
-                    print(specs)
+//                    print(specs)
                     
                     view.menuDefinition = specs
+                    view.rebuildMenu()
                     
                 } catch{
                     print("an error occurred")

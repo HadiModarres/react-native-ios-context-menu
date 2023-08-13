@@ -8,6 +8,7 @@ import React
 class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     //    let subView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
     var menuDefinition: UIMenuDefinition?
+    var menu: UIMenu?
     
     /**
      The required initializer that receives an instance of `AppContext`.
@@ -27,6 +28,14 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
         self.appContext?.eventEmitter?.sendEvent(withName: "previewWillEnd", body: ["value": "will end"])
+    }
+    
+    func rebuildMenu(){
+        if let menuDefinition = self.menuDefinition {
+            print("rebuilding menu")
+            self.menu = MenuUtils.buildUIMenuFromDefinition(uiMenuDefinition: menuDefinition)
+            print(self.menu)
+        }
     }
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
@@ -53,20 +62,21 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
                                           actionProvider: {
             suggestedActions in
             
-            if let title = self.menuDefinition?.title {
-                
-                let inspectAction =
-                UIAction(title: NSLocalizedString(title, comment: ""),
-                         image: UIImage(systemName: "arrow.up.square")) { action in
-                    print("pressed2")
-                }
-                
-                
-                return UIMenu(title: "Title", children: [inspectAction])
-                
-            } else {
-                return nil
-            }
+            return self.menu
+//            if let title = self.menuDefinition?.title {
+//
+//                let inspectAction =
+//                UIAction(title: NSLocalizedString(title, comment: ""),
+//                         image: UIImage(systemName: "arrow.up.square")) { action in
+//                    print("pressed2")
+//                }
+//
+//
+//                return UIMenu(title: "Title", children: [inspectAction])
+//
+//            } else {
+//                return nil
+//            }
             
         })
     }
