@@ -16,7 +16,7 @@ public class ReactNativeIosContextMenuModule: Module {
         ])
         
         // Defines event names that the module can send to JavaScript.
-        Events("onChange","previewWillLoad", "previewWillEnd")
+        Events("onChange","previewWillLoad", "previewWillEnd","handlerTrigger")
         
         // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
         Function("hello") {
@@ -39,7 +39,7 @@ public class ReactNativeIosContextMenuModule: Module {
             Prop("menu") { (view: ReactNativeIosContextMenuView, prop: String) in
                 
                 let decoder = JSONDecoder()
-                let encoder = JSONEncoder()
+//                let encoder = JSONEncoder()
                 
                 do{
                     
@@ -60,13 +60,13 @@ public class ReactNativeIosContextMenuModule: Module {
                     let specs = try decoder.decode(UIMenuDefinition.self, from: jsonData)
                     
                     
-//                    print(specs)
+                    print(specs)
                     
                     view.menuDefinition = specs
                     view.rebuildMenu()
                     
-                } catch{
-                    print("an error occurred")
+                } catch {
+                    print("an error occurred \(error)")
                 }
             }
             

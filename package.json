@@ -42,6 +42,7 @@
     "expo-module-scripts": "^3.0.11",
     "expo-modules-core": "^1.5.7",
     "prettier": "^3.0.1",
+    "ts-jest": "^29.1.1",
     "typescript": "^5.1.6"
   },
   "peerDependencies": {

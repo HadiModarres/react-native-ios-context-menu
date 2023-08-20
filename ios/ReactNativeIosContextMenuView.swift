@@ -33,7 +33,9 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     func rebuildMenu(){
         if let menuDefinition = self.menuDefinition {
             print("rebuilding menu")
-            self.menu = MenuUtils.buildUIMenuFromDefinition(uiMenuDefinition: menuDefinition)
+            self.menu = MenuUtils.buildUIMenuFromDefinition(uiMenuDefinition: menuDefinition, onTriggerHandler: {handler in
+                self.appContext?.eventEmitter?.sendEvent(withName: "handlerTrigger", body: ["value": handler])
+            })
             print(self.menu)
         }
     }
@@ -63,20 +65,20 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
             suggestedActions in
             
             return self.menu
-//            if let title = self.menuDefinition?.title {
-//
-//                let inspectAction =
-//                UIAction(title: NSLocalizedString(title, comment: ""),
-//                         image: UIImage(systemName: "arrow.up.square")) { action in
-//                    print("pressed2")
-//                }
-//
-//
-//                return UIMenu(title: "Title", children: [inspectAction])
-//
-//            } else {
-//                return nil
-//            }
+            //            if let title = self.menuDefinition?.title {
+            //
+            //                let inspectAction =
+            //                UIAction(title: NSLocalizedString(title, comment: ""),
+            //                         image: UIImage(systemName: "arrow.up.square")) { action in
+            //                    print("pressed2")
+            //                }
+            //
+            //
+            //                return UIMenu(title: "Title", children: [inspectAction])
+            //
+            //            } else {
+            //                return nil
+            //            }
             
         })
     }

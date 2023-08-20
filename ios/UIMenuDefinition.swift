@@ -9,6 +9,7 @@ protocol UIMenuChildDefinition: Codable {
 struct UIActionDefinition: Codable {
     let title: String
     let subtitle: String?
+    let handler: String?
 }
 
 struct UIMenuDefinition: Codable {
@@ -27,7 +28,7 @@ struct UIMenuDefinition: Codable {
 
 class MenuUtils {
     
-    static func buildUIMenuFromDefinition(uiMenuDefinition: UIMenuDefinition) -> UIMenu {
+    static func buildUIMenuFromDefinition(uiMenuDefinition: UIMenuDefinition, onTriggerHandler:  @escaping( String)->Void ) -> UIMenu {
         // complete
         var menuItems: [UIMenuElement] = []
         
@@ -42,7 +43,12 @@ class MenuUtils {
                             subtitle: actionDefinition.subtitle,
                             image: nil,
                             identifier: nil,
-                            handler: { _ in /* Handle action here */ }
+                            handler: { _ in
+                                if let handler = actionDefinition.handler {
+                                    onTriggerHandler(handler)
+                                }
+                                
+                            }
                         )
                         menuItems.append(action)
                         
@@ -52,14 +58,19 @@ class MenuUtils {
                             title: actionDefinition.title,
                             image: nil,
                             identifier: nil,
-                            handler: { _ in /* Handle action here */ }
+                            handler: { _ in
+                                if let handler = actionDefinition.handler {
+                                    onTriggerHandler(handler)
+                                }
+                                
+                            }
                         )
                         menuItems.append(action)
                         
                     }
                     
                 case .menu(let submenuDefinition):
-                    let submenu = buildUIMenuFromDefinition(uiMenuDefinition: submenuDefinition)
+                    let submenu = buildUIMenuFromDefinition(uiMenuDefinition: submenuDefinition, onTriggerHandler: onTriggerHandler)
                     //                    let menu = UIMenu(title: submenuDefinition.title, children: submenu.children)
                     menuItems.append(submenu)
                 }

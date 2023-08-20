@@ -1,7 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useMemo } from "react";
+import { Text, View } from "react-native";
 import { ContextMenu } from "react-native-ios-context-menu";
 
 export default function App() {
+  const bla = useMemo(() => {
+    return 2;
+  }, []);
+
+  console.log(bla);
+
   return (
     <ContextMenu
       preview={<View style={{ width: "100%", height: "100%" }} />}
@@ -20,15 +27,11 @@ export default function App() {
                       value: {
                         title: "action titlee nested",
                         subtitle: "action subtitle nested!",
+                        handler: () => {
+                          console.log("yesssssssss!!");
+                        },
                       },
                     },
-
-                    // menu: {
-                    //   value: {
-                    //     title: "nested menu 2",
-                    //     children: [],
-                    //   },
-                    // },
                   },
 
                   {
@@ -61,7 +64,13 @@ export default function App() {
           },
           {
             action: {
-              value: { title: "action titlee", subtitle: "action subtitle!" },
+              value: {
+                title: "action titlee",
+                subtitle: "action subtitle!",
+                handler: () => {
+                  console.log("handler 2!");
+                },
+              },
             },
           },
         ],
@@ -71,12 +80,3 @@ export default function App() {
     </ContextMenu>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
