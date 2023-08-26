@@ -1,7 +1,11 @@
-import * as React from "react";
-import { View, Text, AppRegistry } from "react-native";
+import React, { useCallback, useEffect, useMemo } from "react";
+import { AppRegistry, ViewProps } from "react-native";
 
-import { addHandlerListener, removeSubscription } from ".";
+import {
+  addHandlerListener,
+  addWillDisplayListener,
+  removeSubscription,
+} from ".";
 import {
   HandlerTriggerEventPayload,
   UIMenuDefinition,
@@ -9,38 +13,36 @@ import {
 import ReactNativeIosContextMenuView from "./ReactNativeIosContextMenuView";
 import { processMenuDefinition } from "./utils";
 
-const ContextMenuPreview = () => {
-  return (
-    <View
-      style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "red",
-        alignItems: "center",
-        justifyContent: "center",
-        borderColor: "white",
-        borderWidth: 12,
-      }}
-    >
-      <Text>context menu preview</Text>
-    </View>
-  );
-};
-
-AppRegistry.registerComponent("ContextMenuPreview", () => ContextMenuPreview);
-
 type ContextMenuProps = {
   children: React.ReactNode;
-  preview: React.ReactNode;
+  containerProps?: ViewProps;
+  Preview?: React.ComponentType<any>;
   menu: UIMenuDefinition;
+  willDisplay?: () => void;
+  willEnd?: () => void;
 };
 
-export const ContextMenu = ({ children, preview, menu }: ContextMenuProps) => {
-  const processedMenu = React.useMemo(() => {
+const PREVIEW_COMPONENT_TAG = "ContextMenuPreview";
+
+export const ContextMenu = ({
+  children,
+  containerProps,
+  Preview,
+  menu,
+  willDisplay,
+  willEnd,
+}: ContextMenuProps) => {
+  useEffect(() => {
+    if (Preview) {
+      AppRegistry.registerComponent(PREVIEW_COMPONENT_TAG, () => Preview, true);
+    }
+  }, [Preview]);
+
+  const processedMenu = useMemo(() => {
     return processMenuDefinition(menu);
   }, [menu]);
 
-  const handlerTriggered = React.useCallback(
+  const handlerTriggered = useCallback(
     (event: HandlerTriggerEventPayload) => {
       console.log(event);
       console.log(Object.entries(processedMenu.handlerMap));
@@ -51,17 +53,33 @@ export const ContextMenu = ({ children, preview, menu }: ContextMenuProps) => {
     [processedMenu],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const sub = addHandlerListener(handlerTriggered);
     return () => removeSubscription(sub);
   }, [handlerTriggered]);
 
+  useEffect(() => {
+    if (!willDisplay) {
+      return;
+    }
+    const sub = addWillDisplayListener(willDisplay);
+    return () => removeSubscription(sub);
+  }, [willDisplay]);
+
+  useEffect(() => {
+    if (!willEnd) {
+      return;
+    }
+    const sub = addWillDisplayListener(willEnd);
+    return () => removeSubscription(sub);
+  }, [willEnd]);
+
   return (
     <ReactNativeIosContextMenuView
-      style={{ width: 300, height: 300, borderColor: "red", borderWidth: 1 }}
+      {...containerProps}
       menu={JSON.stringify(processedMenu.menuDefinitionNative)}
     >
-      <View collapsable={false}>{children}</View>
+      {children}
     </ReactNativeIosContextMenuView>
   );
 };

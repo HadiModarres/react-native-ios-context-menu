@@ -16,7 +16,7 @@ public class ReactNativeIosContextMenuModule: Module {
         ])
         
         // Defines event names that the module can send to JavaScript.
-        Events("onChange","previewWillLoad", "previewWillEnd","handlerTrigger")
+        Events("onChange","willDisplay", "willEnd", "handlerTrigger")
         
         // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
         Function("hello") {
@@ -39,22 +39,8 @@ public class ReactNativeIosContextMenuModule: Module {
             Prop("menu") { (view: ReactNativeIosContextMenuView, prop: String) in
                 
                 let decoder = JSONDecoder()
-//                let encoder = JSONEncoder()
                 
                 do{
-                    
-//                    let b: UIMenuDefinition = UIMenuDefinition(
-//                        title: "title",
-//                        subtitle: "subtitle",
-//                        children: [
-//                            .action(value: UIActionDefinition(title: "action title", subtitle: "action subtitle")),
-//                            .menu(value: UIMenuDefinition(title: "submenu title", subtitle: "submenu subtitle",children: nil))
-//                        ])
-//
-//                    let encoded = try encoder.encode(b)
-//                    let convertedString = String(data: encoded, encoding: .utf8)
-//
-//                    print(convertedString)
                     
                     let jsonData = prop.data(using: .utf8)!
                     let specs = try decoder.decode(UIMenuDefinition.self, from: jsonData)

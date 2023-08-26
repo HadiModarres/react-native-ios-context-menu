@@ -26,8 +26,12 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     }
     
     
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
+        self.appContext?.eventEmitter?.sendEvent(withName: "willDisplay", body: ["value": "will display menu"])
+    }
+    
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        self.appContext?.eventEmitter?.sendEvent(withName: "previewWillEnd", body: ["value": "will end"])
+        self.appContext?.eventEmitter?.sendEvent(withName: "willEnd", body: ["value": "will end display menu"])
     }
     
     func rebuildMenu(){
@@ -53,7 +57,6 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
                 let rootView = RCTRootView(bridge: bridge, moduleName: "ContextMenuPreview", initialProperties: [:])
                 previewViewController.view = rootView
                 
-                self.appContext?.eventEmitter?.sendEvent(withName: "previewWillLoad", body: ["value": "will load"])
                 
                 return previewViewController
                 

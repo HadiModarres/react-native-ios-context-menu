@@ -4,11 +4,11 @@ export type ChangeEventPayload = {
   value: string;
 };
 
-export type PreviewWillLoadEventPayload = {
+export type WillDisplayEventPayload = {
   value: string;
 };
 
-export type PreviewWillEndEventPayload = {
+export type WillEndEventPayload = {
   value: string;
 };
 
@@ -23,18 +23,24 @@ export type ReactNativeIosContextMenuViewProps = ViewProps & {
 export type UIMenuDefinition = {
   title: string;
   subtitle?: string;
+  image?: UIImage;
   children: UIMenuChild[];
 };
 
 type UIActionDefinition = {
   title: string;
   subtitle?: string;
+  image?: UIImage;
   handler?: () => void;
 };
 
 type UIMenuChild = {
   action?: { value: UIActionDefinition };
   menu?: { value: UIMenuDefinition };
+};
+
+type UIImage = {
+  systemName: string;
 };
 
 /**

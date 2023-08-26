@@ -5,10 +5,15 @@ protocol UIMenuChildDefinition: Codable {
     
 }
 
+struct UIImageDefinition: Codable {
+    let systemName: String
+}
+
 
 struct UIActionDefinition: Codable {
     let title: String
     let subtitle: String?
+    let image: UIImageDefinition?
     let handler: String?
 }
 
@@ -21,6 +26,7 @@ struct UIMenuDefinition: Codable {
     
     let title: String
     let subtitle: String?
+    let image: UIImageDefinition?
     let children: [Child]?
     
 }
@@ -32,16 +38,23 @@ class MenuUtils {
         // complete
         var menuItems: [UIMenuElement] = []
         
+        
         if let children = uiMenuDefinition.children {
             for child in children {
                 switch child {
                 case .action(let actionDefinition):
+                    var image: UIImage? = nil
+                    if let imageDefinition = actionDefinition.image{
+                        image = UIImage(systemName: imageDefinition.systemName)
+                    }
                     if #available(iOS 15.0, *){
+                        
+                        
                         
                         let action = UIAction(
                             title: actionDefinition.title,
                             subtitle: actionDefinition.subtitle,
-                            image: nil,
+                            image: image,
                             identifier: nil,
                             handler: { _ in
                                 if let handler = actionDefinition.handler {
@@ -56,7 +69,7 @@ class MenuUtils {
                         
                         let action = UIAction(
                             title: actionDefinition.title,
-                            image: nil,
+                            image: image,
                             identifier: nil,
                             handler: { _ in
                                 if let handler = actionDefinition.handler {
@@ -77,7 +90,20 @@ class MenuUtils {
             }
         }
         
-        let menu = UIMenu(title: uiMenuDefinition.title, children: menuItems)
-        return menu
+        var image: UIImage? = nil
+        if let imageDefinition = uiMenuDefinition.image{
+            image = UIImage(systemName: imageDefinition.systemName)
+        }
+        
+        if #available(iOS 15.0, *){
+            
+            let menu = UIMenu(title: uiMenuDefinition.title, subtitle: uiMenuDefinition.subtitle, image: image, children: menuItems)
+            return menu
+        } else{
+            
+            let menu = UIMenu(title: uiMenuDefinition.title, image: image, children: menuItems)
+            return menu
+        }
+        
     }
 }
