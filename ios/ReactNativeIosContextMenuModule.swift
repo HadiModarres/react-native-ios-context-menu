@@ -56,6 +56,15 @@ public class ReactNativeIosContextMenuModule: Module {
                 }
             }
             
+            Prop("showPreview") { (view: ReactNativeIosContextMenuView, prop: Bool) in
+                view.showPreview = prop
+            }
+            
+            Prop("id") { (view: ReactNativeIosContextMenuView, prop: String) in
+                view.id = prop
+            }
+            
+            
         }
     }
 }

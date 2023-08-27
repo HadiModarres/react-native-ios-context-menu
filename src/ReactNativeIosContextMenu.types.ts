@@ -5,7 +5,7 @@ export type ChangeEventPayload = {
 };
 
 export type WillDisplayEventPayload = {
-  value: string;
+  id: string;
 };
 
 export type WillEndEventPayload = {
@@ -18,28 +18,30 @@ export type HandlerTriggerEventPayload = {
 
 export type ReactNativeIosContextMenuViewProps = ViewProps & {
   menu: string;
+  showPreview: boolean;
+  id: string;
 };
 
 export type UIMenuDefinition = {
   title: string;
   subtitle?: string;
-  image?: UIImage;
+  image?: UIImageDefinition;
   children: UIMenuChild[];
 };
 
-type UIActionDefinition = {
+export type UIActionDefinition = {
   title: string;
   subtitle?: string;
-  image?: UIImage;
+  image?: UIImageDefinition;
   handler?: () => void;
 };
 
-type UIMenuChild = {
+export type UIMenuChild = {
   action?: { value: UIActionDefinition };
   menu?: { value: UIMenuDefinition };
 };
 
-type UIImage = {
+export type UIImageDefinition = {
   systemName: string;
 };
 

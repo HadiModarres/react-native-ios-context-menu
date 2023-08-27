@@ -1,6 +1,11 @@
 # react-native-ios-context-menu
 
-Use iOS context menus in your React Native application
+Use iOS context menus in your React Native application.
+
+
+
+
+[Apple Developer Documentation] (https://developer.apple.com/design/human-interface-guidelines/context-menus)
 
 # API documentation
 

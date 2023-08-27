@@ -9,6 +9,8 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     //    let subView = UIView(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
     var menuDefinition: UIMenuDefinition?
     var menu: UIMenu?
+    var showPreview = false
+    var id = "n/a"
     
     /**
      The required initializer that receives an instance of `AppContext`.
@@ -27,7 +29,7 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        self.appContext?.eventEmitter?.sendEvent(withName: "willDisplay", body: ["value": "will display menu"])
+        self.appContext?.eventEmitter?.sendEvent(withName: "willDisplay", body: ["id": self.id])
     }
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
@@ -47,8 +49,11 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction,
                                 configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
         return UIContextMenuConfiguration(identifier: nil,
-                                          previewProvider: {
+                                          previewProvider: self.showPreview == false ? nil: {
             
+//            if self.showPreview == false {
+//                return nil
+//            }
             let previewViewController = UIViewController()
             
             previewViewController.modalPresentationStyle = UIModalPresentationStyle.fullScreen

@@ -1,40 +1,65 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { AppRegistry, ViewProps } from "react-native";
 
+import { ContextMenuPreviewRoot } from "./ContextMenuPreviewRoot";
+import { ContextMenuRegistry } from "./ContextMenuRegistry";
+import {
+  HandlerTriggerEventPayload,
+  UIMenuDefinition,
+  WillDisplayEventPayload,
+} from "./ReactNativeIosContextMenu.types";
+import ReactNativeIosContextMenuView from "./ReactNativeIosContextMenuView";
 import {
   addHandlerListener,
   addWillDisplayListener,
   removeSubscription,
-} from ".";
-import {
-  HandlerTriggerEventPayload,
-  UIMenuDefinition,
-} from "./ReactNativeIosContextMenu.types";
-import ReactNativeIosContextMenuView from "./ReactNativeIosContextMenuView";
+} from "./events";
 import { processMenuDefinition } from "./utils";
 
-type ContextMenuProps = {
+export interface ContextMenuProps {
   children: React.ReactNode;
   containerProps?: ViewProps;
-  Preview?: React.ComponentType<any>;
+  Preview?: React.ReactNode;
   menu: UIMenuDefinition;
+  /**
+   *
+   * Provide code to be executed when context menu is about to launch
+   */
   willDisplay?: () => void;
+  /**
+   *
+   * Provide code to be executed when context menu is about to be closed
+   */
   willEnd?: () => void;
-};
+}
 
 const PREVIEW_COMPONENT_TAG = "ContextMenuPreview";
+AppRegistry.registerComponent(
+  PREVIEW_COMPONENT_TAG,
+  () => ContextMenuPreviewRoot,
+  true,
+);
 
-export const ContextMenu = ({
-  children,
-  containerProps,
-  Preview,
-  menu,
-  willDisplay,
-  willEnd,
-}: ContextMenuProps) => {
-  useEffect(() => {
+/**
+ *
+ * @param props
+ * @returns JSX.Eelement
+ */
+export const ContextMenu = (props: ContextMenuProps) => {
+  const idRef = useRef(ContextMenuRegistry.generateUniqueId());
+
+  const { children, containerProps, Preview, menu, willDisplay, willEnd } =
+    props;
+
+  useLayoutEffect(() => {
     if (Preview) {
-      AppRegistry.registerComponent(PREVIEW_COMPONENT_TAG, () => Preview, true);
+      ContextMenuRegistry.registeredPreviews[idRef.current] = Preview;
     }
   }, [Preview]);
 
@@ -44,8 +69,6 @@ export const ContextMenu = ({
 
   const handlerTriggered = useCallback(
     (event: HandlerTriggerEventPayload) => {
-      console.log(event);
-      console.log(Object.entries(processedMenu.handlerMap));
       if (processedMenu && processedMenu.handlerMap[event.value]) {
         processedMenu.handlerMap[event.value]();
       }
@@ -59,10 +82,14 @@ export const ContextMenu = ({
   }, [handlerTriggered]);
 
   useEffect(() => {
-    if (!willDisplay) {
-      return;
-    }
-    const sub = addWillDisplayListener(willDisplay);
+    const willDisplayWrapper = (event: WillDisplayEventPayload) => {
+      console.log("going to display");
+      console.log(`will display view context menu view with id: ${event.id}`);
+      // ContextMenuRegistry.currentActiveId = event.id;
+
+      willDisplay?.();
+    };
+    const sub = addWillDisplayListener(willDisplayWrapper);
     return () => removeSubscription(sub);
   }, [willDisplay]);
 
@@ -77,6 +104,8 @@ export const ContextMenu = ({
   return (
     <ReactNativeIosContextMenuView
       {...containerProps}
+      showPreview={Boolean(Preview)}
+      id={idRef.current}
       menu={JSON.stringify(processedMenu.menuDefinitionNative)}
     >
       {children}
