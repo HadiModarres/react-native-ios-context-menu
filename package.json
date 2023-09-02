@@ -28,6 +28,10 @@
   "author": "Hadi Modarres (https://github.com/HadiModarres)",
   "license": "MIT",
   "homepage": "https://github.com/HadiModarres/react-native-ios-context-menu#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "devDependencies": {
     "@types/react": "^18.0.25",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
