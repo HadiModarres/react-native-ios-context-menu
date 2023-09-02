@@ -1,5 +1,5 @@
 {
-  "name": "react-native-ios-context-menu",
+  "name": "@hmodarres/react-native-ios-context-menu",
   "version": "0.1.0",
   "description": "Use iOS context menus in your React Native application",
   "main": "build/index.js",
