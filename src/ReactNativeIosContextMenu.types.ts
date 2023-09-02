@@ -23,6 +23,7 @@ export type ReactNativeIosContextMenuViewProps = ViewProps & {
 };
 
 export type UIMenuDefinition = {
+  type: "menu";
   title: string;
   subtitle?: string;
   image?: UIImageDefinition;
@@ -30,16 +31,14 @@ export type UIMenuDefinition = {
 };
 
 export type UIActionDefinition = {
+  type: "action";
   title: string;
   subtitle?: string;
   image?: UIImageDefinition;
   handler?: () => void;
 };
 
-export type UIMenuChild = {
-  action?: { value: UIActionDefinition };
-  menu?: { value: UIMenuDefinition };
-};
+export type UIMenuChild = UIActionDefinition | UIMenuDefinition;
 
 export type UIImageDefinition = {
   systemName: string;
@@ -48,7 +47,10 @@ export type UIImageDefinition = {
 /**
  * below type is the type we'll be sending to native
  */
-export type UIMenuDefinitionNative = Omit<UIMenuDefinition, "children"> & {
+export type UIMenuDefinitionNative = Omit<
+  UIMenuDefinition,
+  "children" | "type"
+> & {
   children: UIMenuChildNative[];
 };
 
@@ -57,6 +59,9 @@ export type UIMenuChildNative = {
   menu?: { value: UIMenuDefinitionNative };
 };
 
-type UIActionDefinitionNative = Omit<UIActionDefinition, "handler"> & {
+export type UIActionDefinitionNative = Omit<
+  UIActionDefinition,
+  "handler" | "type"
+> & {
   handler?: string;
 };

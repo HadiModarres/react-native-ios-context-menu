@@ -2,9 +2,6 @@
 
 Use iOS context menus in your React Native application.
 
-
-
-
 [Apple Developer Documentation] (https://developer.apple.com/design/human-interface-guidelines/context-menus)
 
 # API documentation
@@ -30,11 +27,3 @@ npm install react-native-ios-context-menu
 
 Run `npx pod-install` after installing the npm package.
 
-
-### Configure for Android
-
-
-
-# Contributing
-
-Contributions are very welcome! Please refer to guidelines described in the [contributing guide]( https://github.com/expo/expo#contributing).

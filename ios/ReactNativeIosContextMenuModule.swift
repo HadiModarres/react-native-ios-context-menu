@@ -38,6 +38,8 @@ public class ReactNativeIosContextMenuModule: Module {
             // Defines a setter for the `name` prop.
             Prop("menu") { (view: ReactNativeIosContextMenuView, prop: String) in
                 
+                print(prop)
+                
                 let decoder = JSONDecoder()
                 
                 do{
