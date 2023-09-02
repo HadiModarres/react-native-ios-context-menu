@@ -2,7 +2,7 @@ export class ContextMenuRegistry {
   private static nextGeneratedId = 1;
 
   // static currentActiveId: undefined | string = undefined;
-  static registeredPreviews: Record<string, React.ReactNode> = {};
+  static registeredPreviews: Record<string, () => React.ReactNode> = {};
 
   public static generateUniqueId = (): string => {
     return String(ContextMenuRegistry.nextGeneratedId++);

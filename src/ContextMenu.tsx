@@ -25,7 +25,7 @@ import { processMenuDefinition } from "./utils";
 export interface ContextMenuProps {
   children: React.ReactNode;
   containerProps?: ViewProps;
-  Preview?: React.ReactNode;
+  renderPreview?: () => React.ReactNode;
   menu: UIMenuDefinition;
   /**
    *
@@ -54,14 +54,20 @@ AppRegistry.registerComponent(
 export const ContextMenu = (props: ContextMenuProps) => {
   const idRef = useRef(ContextMenuRegistry.generateUniqueId());
 
-  const { children, containerProps, Preview, menu, willDisplay, willEnd } =
-    props;
+  const {
+    children,
+    containerProps,
+    renderPreview,
+    menu,
+    willDisplay,
+    willEnd,
+  } = props;
 
   useLayoutEffect(() => {
-    if (Preview) {
-      ContextMenuRegistry.registeredPreviews[idRef.current] = Preview;
+    if (renderPreview) {
+      ContextMenuRegistry.registeredPreviews[idRef.current] = renderPreview;
     }
-  }, [Preview]);
+  }, [renderPreview]);
 
   const processedMenu = useMemo(() => {
     return processMenuDefinition(menu);
@@ -104,7 +110,7 @@ export const ContextMenu = (props: ContextMenuProps) => {
   return (
     <ReactNativeIosContextMenuView
       {...containerProps}
-      showPreview={Boolean(Preview)}
+      showPreview={Boolean(renderPreview)}
       id={idRef.current}
       menu={JSON.stringify(processedMenu.menuDefinitionNative)}
     >

@@ -10,10 +10,13 @@ export const ContextMenuPreviewRoot = () => {
   );
 
   const getCurrentActivePreview = (): undefined | React.ReactNode => {
-    if (!currentActiveId) {
+    if (
+      !currentActiveId ||
+      !ContextMenuRegistry.registeredPreviews[currentActiveId]
+    ) {
       return undefined;
     }
-    return ContextMenuRegistry.registeredPreviews[currentActiveId];
+    return ContextMenuRegistry.registeredPreviews[currentActiveId]();
   };
 
   useEffect(() => {
