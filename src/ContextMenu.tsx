@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { AppRegistry, ViewProps } from "react-native";
 
 import { ContextMenuPreviewRoot } from "./ContextMenuPreviewRoot";
@@ -20,17 +20,22 @@ export interface ContextMenuProps {
    * If not provided context menu preview is disabled
    */
   renderPreview?: () => React.ReactNode;
+
+  /**
+   *
+   * Specification for the opened menu, this type closely follows the definitions at https://developer.apple.com/documentation/uikit/uimenu
+   */
   menu: UIMenuDefinition;
   /**
    *
    * Provide code to be executed when context menu is about to launch
    */
-  willDisplay?: () => void;
+  onWillDisplay?: () => void;
   /**
    *
    * Provide code to be executed when context menu is about to be closed
    */
-  willEnd?: () => void;
+  onWillEnd?: () => void;
 }
 const PREVIEW_COMPONENT_TAG = "ContextMenuPreview";
 AppRegistry.registerComponent(
@@ -45,14 +50,15 @@ AppRegistry.registerComponent(
  */
 export const ContextMenu = (props: ContextMenuProps) => {
   const idRef = useRef(ContextMenuRegistry.generateUniqueId());
+  const isActive = useRef(false);
 
   const {
     children,
     containerProps,
     renderPreview,
     menu,
-    willDisplay,
-    willEnd,
+    onWillDisplay,
+    onWillEnd,
   } = props;
 
   const processedMenu = useMemo(() => {
@@ -69,17 +75,30 @@ export const ContextMenu = (props: ContextMenuProps) => {
     [processedMenu],
   );
 
-  const onWillDisplay = useCallback(() => {
+  useEffect(() => {
+    if (isActive.current) {
+      ContextMenuRegistry.activePreview = renderPreview;
+      messageEmitter.emit("onSetPreview");
+    }
+  }, [renderPreview]);
+
+  const willDisplay = useCallback(() => {
+    console.log("on will display called");
+    isActive.current = true;
     if (renderPreview) {
       ContextMenuRegistry.activePreview = renderPreview;
       messageEmitter.emit("onSetPreview");
     }
-    willDisplay?.();
-  }, [willDisplay]);
+    onWillDisplay?.();
+  }, [onWillDisplay, renderPreview]);
 
-  const onWillEnd = useCallback(() => {
-    willEnd?.();
-  }, [willEnd]);
+  const willEnd = useCallback(() => {
+    if (isActive.current) {
+      ContextMenuRegistry.activePreview = () => null;
+    }
+    isActive.current = false;
+    onWillEnd?.();
+  }, [onWillEnd]);
 
   return (
     <ReactNativeIosContextMenuView
@@ -87,8 +106,8 @@ export const ContextMenu = (props: ContextMenuProps) => {
       showPreview={Boolean(renderPreview)}
       id={idRef.current}
       menu={JSON.stringify(processedMenu.menuDefinitionNative)}
-      onWillDisplay={onWillDisplay}
-      onWillEnd={onWillEnd}
+      onWillDisplay={willDisplay}
+      onWillEnd={willEnd}
       onTriggerHandler={handlerTriggered}
     >
       {children}

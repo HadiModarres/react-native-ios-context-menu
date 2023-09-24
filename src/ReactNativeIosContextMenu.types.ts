@@ -21,24 +21,53 @@ export type ReactNativeIosContextMenuViewProps = ViewProps & {
 };
 
 export type UIMenuDefinition = {
+  /**
+   *
+   * Menu item type
+   */
   type: "menu";
   title: string;
+  /**
+   *
+   * Only works with iOS 15+
+   */
   subtitle?: string;
   image?: UIImageDefinition;
+
+  /**
+   *
+   * Specification for menu items
+   */
   children: UIMenuChild[];
 };
 
 export type UIActionDefinition = {
+  /**
+   *
+   * Menu item type
+   */
   type: "action";
   title: string;
+  /**
+   *
+   * Only works with iOS 15+
+   */
   subtitle?: string;
   image?: UIImageDefinition;
   handler?: () => void;
 };
 
+/**
+ *
+ * A child can be an action or a another menu to specify nested menus.
+ */
 export type UIMenuChild = UIActionDefinition | UIMenuDefinition;
 
 export type UIImageDefinition = {
+  /**
+   *
+   * Name of the SF Symbols image: https://developer.apple.com/sf-symbols/
+   */
   systemName: string;
 };
 
