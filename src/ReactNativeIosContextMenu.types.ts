@@ -1,14 +1,6 @@
-import { ViewProps } from "react-native";
+import { NativeSyntheticEvent, ViewProps } from "react-native";
 
 export type ChangeEventPayload = {
-  value: string;
-};
-
-export type WillDisplayEventPayload = {
-  id: string;
-};
-
-export type WillEndEventPayload = {
   value: string;
 };
 
@@ -16,10 +8,16 @@ export type HandlerTriggerEventPayload = {
   value: string;
 };
 
+export type OnHandlerTriggerEvent =
+  NativeSyntheticEvent<HandlerTriggerEventPayload>;
+
 export type ReactNativeIosContextMenuViewProps = ViewProps & {
   menu: string;
   showPreview: boolean;
   id: string;
+  onWillDisplay: () => void;
+  onWillEnd: () => void;
+  onTriggerHandler: (event: OnHandlerTriggerEvent) => void;
 };
 
 export type UIMenuDefinition = {
@@ -45,7 +43,7 @@ export type UIImageDefinition = {
 };
 
 /**
- * below type is the type we'll be sending to native
+ * below type is the type that'll be sent to native
  */
 export type UIMenuDefinitionNative = Omit<
   UIMenuDefinition,

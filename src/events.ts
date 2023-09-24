@@ -7,8 +7,6 @@ import {
 import {
   ChangeEventPayload,
   HandlerTriggerEventPayload,
-  WillDisplayEventPayload,
-  WillEndEventPayload,
 } from "./ReactNativeIosContextMenu.types";
 import ReactNativeIosContextMenuModule from "./ReactNativeIosContextMenuModule";
 
@@ -21,16 +19,6 @@ export function addChangeListener(
   listener: (event: ChangeEventPayload) => void,
 ): Subscription {
   return emitter.addListener<ChangeEventPayload>("onChange", listener);
-}
-
-export function addWillDisplayListener(
-  listener: (event: WillDisplayEventPayload) => void,
-): Subscription {
-  return emitter.addListener<WillDisplayEventPayload>("willDisplay", listener);
-}
-
-export function addWillEndListener(listener: () => void): Subscription {
-  return emitter.addListener<WillEndEventPayload>("willEnd", listener);
 }
 
 export function addHandlerListener(

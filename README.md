@@ -6,8 +6,7 @@ Use iOS context menus in your React Native application.
 
 # API documentation
 
-- [Documentation for the main branch](https://github.com/expo/expo/blob/main/docs/pages/versions/unversioned/sdk/react-native-ios-context-menu.md)
-- [Documentation for the latest stable release](https://docs.expo.dev/versions/latest/sdk/react-native-ios-context-menu/)
+- [API Documentation](https://hadimodarres.github.io/react-native-ios-context-menu)
 
 # Installation in managed Expo projects
 

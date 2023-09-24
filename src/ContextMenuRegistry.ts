@@ -1,19 +1,9 @@
 export class ContextMenuRegistry {
   private static nextGeneratedId = 1;
 
-  // static currentActiveId: undefined | string = undefined;
-  static registeredPreviews: Record<string, () => React.ReactNode> = {};
+  static activePreview: (() => React.ReactNode) | undefined;
 
   public static generateUniqueId = (): string => {
     return String(ContextMenuRegistry.nextGeneratedId++);
   };
-
-  // static getCurrentActivePreview = (): undefined | React.ReactNode => {
-  //   if (!ContextMenuRegistry.currentActiveId) {
-  //     return undefined;
-  //   }
-  //   return ContextMenuRegistry.registeredPreviews[
-  //     ContextMenuRegistry.currentActiveId
-  //   ];
-  // };
 }

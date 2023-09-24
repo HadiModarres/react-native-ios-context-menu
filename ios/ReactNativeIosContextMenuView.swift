@@ -11,6 +11,9 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     var menu: UIMenu?
     var showPreview = false
     var id = "n/a"
+    let onWillDisplay = EventDispatcher()
+    let onWillEnd = EventDispatcher()
+    let onTriggerHandler = EventDispatcher()
     
     /**
      The required initializer that receives an instance of `AppContext`.
@@ -29,18 +32,21 @@ class ReactNativeIosContextMenuView: ExpoView,UIContextMenuInteractionDelegate {
     
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willDisplayMenuFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        self.appContext?.eventEmitter?.sendEvent(withName: "willDisplay", body: ["id": self.id])
+        self.onWillDisplay(["message": "will display"])
+//        self.appContext?.eventEmitter?.sendEvent(withName: "willDisplay", body: ["id": self.id])
     }
     
     func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        self.appContext?.eventEmitter?.sendEvent(withName: "willEnd", body: ["value": "will end display menu"])
+        self.onWillEnd(["message": "will end"])
+//        self.appContext?.eventEmitter?.sendEvent(withName: "willEnd", body: ["id": self.id])
     }
     
     func rebuildMenu(){
         if let menuDefinition = self.menuDefinition {
             print("rebuilding menu")
             self.menu = MenuUtils.buildUIMenuFromDefinition(uiMenuDefinition: menuDefinition, onTriggerHandler: {handler in
-                self.appContext?.eventEmitter?.sendEvent(withName: "handlerTrigger", body: ["value": handler])
+//                self.appContext?.eventEmitter?.sendEvent(withName: "handlerTrigger", body: ["value": handler])
+                self.onTriggerHandler(["value": handler])
             })
             print(self.menu)
         }

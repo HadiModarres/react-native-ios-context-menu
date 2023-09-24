@@ -16,7 +16,7 @@ public class ReactNativeIosContextMenuModule: Module {
         ])
         
         // Defines event names that the module can send to JavaScript.
-        Events("onChange","willDisplay", "willEnd", "handlerTrigger")
+        //        Events("onChange","willDisplay", "willEnd", "handlerTrigger")
         
         // Defines a JavaScript synchronous function that runs the native code on the JavaScript thread.
         Function("hello") {
@@ -35,6 +35,7 @@ public class ReactNativeIosContextMenuModule: Module {
         // Enables the module to be used as a native view. Definition components that are accepted as part of the
         // view definition: Prop, Events.
         View(ReactNativeIosContextMenuView.self) {
+            Events("onWillDisplay", "onWillEnd", "onTriggerHandler")
             // Defines a setter for the `name` prop.
             Prop("menu") { (view: ReactNativeIosContextMenuView, prop: String) in
                 
